@@ -6,12 +6,12 @@
   "publisher": "placeholder-publisher",
   "repository": {
     "type": "git",
-    "url": "https://github.com/placeholder-org/laravel-developer-toolkit"
+    "url": "https://github.com/sajusun/laravel-dev-toolkit"
   },
   "bugs": {
-    "url": "https://github.com/placeholder-org/laravel-developer-toolkit/issues"
+    "url": "https://github.com/sajusun/laravel-dev-toolkit/issues"
   },
-  "homepage": "https://github.com/placeholder-org/laravel-developer-toolkit#readme",
+  "homepage": "https://github.com/sajusun/laravel-dev-toolkit#readme",
   "license": "MIT",
   "engines": {
     "vscode": "^1.90.0"
@@ -91,7 +91,7 @@
     "vscode:prepublish": "npm run package",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "build": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+    "build": "node init && esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
     "package": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --minify",
     "package-vsix": "vsce package --no-dependencies",
     "lint": "eslint src tests --ext ts",
@@ -107,9 +107,11 @@
     "@typescript-eslint/eslint-plugin": "^7.7.0",
     "@typescript-eslint/parser": "^7.7.0",
     "@vscode/vsce": "^2.26.1",
+    "dotenv": "^8.2.0",
     "esbuild": "^0.21.1",
     "eslint": "^8.57.0",
     "mocha": "^10.4.0",
+    "node-fetch": "^3.3.2",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5"
   }

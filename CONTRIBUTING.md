@@ -13,8 +13,8 @@ Thank you for your interest in contributing to Laravel Developer Toolkit! We wel
 
 1. Fork and clone the repository:
    ```bash
-   git clone https://github.com/[YOUR-ORG]/laravel-developer-toolkit.git
-   cd laravel-developer-toolkit
+   git clone https://github.com/sajusun/laravel-dev-toolkit.git
+   cd laravel-dev-toolkit
    ```
 
 2. Install dependencies:

@@ -1,0 +1,11 @@
+.vscode/**
+.github/**
+src/**
+tests/**
+out/**
+node_modules/**
+.eslintrc.json
+.prettierrc
+tsconfig*.json
+promt.txt
+*.vsix

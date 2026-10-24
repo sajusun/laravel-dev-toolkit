@@ -1,0 +1,377 @@
+# Project: Laravel Developer Toolkit — Open-Source VS Code Extension
+
+## 1. Your Role
+
+Act as a senior TypeScript engineer, VS Code extension architect, Laravel ecosystem expert, QA engineer, and open-source maintainer.
+
+Build a production-quality, open-source Visual Studio Code extension called **Laravel Developer Toolkit**.
+
+Do not create a disposable demo or tutorial-only project. Build a maintainable developer tool with clear architecture, reliable code generation, automated tests, professional documentation, and a realistic release process.
+
+Work incrementally. Inspect the existing workspace first. If it is empty, scaffold the project. If it already contains files, inspect them before changing anything. Do not overwrite unrelated files.
+
+## 2. Product Vision
+
+Laravel Developer Toolkit helps Laravel/PHP developers generate common Laravel classes directly from VS Code, reducing repetitive boilerplate while following the target project's existing structure and conventions.
+
+The extension must be:
+- Free and open source.
+- Licensed under MIT.
+- Written primarily in TypeScript.
+- Local-first, with no mandatory account, API key, backend, or subscription.
+- Safe to use in real Laravel projects.
+- Suitable for publication on the Visual Studio Marketplace.
+- Accessible to beginners while remaining useful to experienced developers.
+
+Do not implement paid features, subscriptions, license checks, telemetry, advertising, or external analytics.
+
+## 3. Target Users
+
+- Laravel developers.
+- Laravel API developers.
+- Developers maintaining medium and large Laravel codebases.
+- Beginners who want to understand Laravel file organization.
+- Developers who prefer generating files from VS Code rather than repeatedly typing Artisan commands.
+
+## 4. Technical Stack
+
+Use:
+- TypeScript with strict compiler settings.
+- Node.js runtime supported by the chosen VS Code engine version.
+- Official VS Code Extension API.
+- VS Code extension manifest in package.json.
+- ESLint and Prettier, configured compatibly.
+- A maintained testing framework appropriate for VS Code extensions.
+- GitHub Actions for automated checks.
+- npm as the package manager unless the workspace already uses another package manager.
+
+Use current stable, mutually compatible dependencies at implementation time. Do not guess versions without checking package compatibility.
+
+Follow the official documentation:
+- https://code.visualstudio.com/api
+- https://code.visualstudio.com/api/get-started/your-first-extension
+- https://code.visualstudio.com/api/working-with-extensions/testing-extension
+- https://code.visualstudio.com/api/working-with-extensions/publishing-extension
+- https://laravel.com/docs
+
+Do not introduce React or a Webview into the MVP. Use native VS Code Quick Picks, input boxes, progress notifications, and confirmation dialogs where appropriate.
+
+## 5. Initial MVP Scope
+
+### Feature A: Laravel Project Detection
+
+Implement reliable project detection using workspace files and directories.
+
+Support common indicators such as:
+- artisan
+- composer.json
+- app/
+- bootstrap/
+- routes/
+- config/
+
+Do not assume that a single file or folder guarantees the workspace is a valid Laravel application.
+
+Detection should:
+- Work with a workspace root and nested folders.
+- Support multi-root workspaces where practical.
+- Avoid scanning node_modules, vendor, .git, and other unnecessary directories recursively.
+- Explain clearly when no Laravel project is detected.
+- Never modify the project during detection.
+
+Handle inaccessible files and filesystem errors gracefully.
+
+### Feature B: Controller Generator
+
+Register a command such as:
+
+Laravel Developer Toolkit: Create Controller
+
+Allow users to choose:
+- Controller name.
+- Destination directory or an appropriate default.
+- Optional resource-controller methods.
+- Optional API-controller template, only if implemented and tested.
+
+Requirements:
+- Validate names and reject unsafe paths.
+- Generate valid PHP code with appropriate namespace and class name.
+- Respect common Laravel conventions.
+- Avoid duplicate namespaces and malformed PHP.
+- Show a preview or clear destination before writing.
+- If the target file exists, ask the user before replacing it.
+- Never overwrite an existing file silently.
+- Report the exact file path after successful creation.
+
+### Feature C: Form Request Generator
+
+Register:
+
+Laravel Developer Toolkit: Create Form Request
+
+Generate a valid Form Request class with:
+- Strictly validated class name.
+- Correct namespace derived from the destination.
+- authorize() method.
+- rules() method.
+- Appropriate return types.
+- Clear, minimal comments only where useful.
+
+Do not invent application-specific validation rules. Use an empty or safe starter rules array unless the user explicitly provides rules.
+
+### Feature D: API Resource Generator
+
+Register:
+
+Laravel Developer Toolkit: Create API Resource
+
+Generate a valid JsonResource class with:
+- Correct namespace.
+- toArray() method.
+- A safe starter implementation.
+- Clear instructions on how to customize the generated output.
+
+Do not assume the target model's database columns unless the user provides them or the extension explicitly inspects them safely.
+
+If the full API Resource generator cannot be completed reliably in the first milestone, document it as a subsequent milestone rather than shipping a broken implementation.
+
+## 6. Command Palette and User Experience
+
+All MVP features must be accessible through the VS Code Command Palette.
+
+Requirements:
+- Use clear, consistent command names.
+- Use Quick Pick or Input Box for user input.
+- Validate user input before generating files.
+- Show concise progress and success/error notifications.
+- Explain actionable recovery steps when an operation fails.
+- Respect cancellation.
+- Do not show success notifications before file creation succeeds.
+- Avoid excessive popups.
+- Do not require a custom Webview or sidebar in the MVP.
+
+## 7. Architecture
+
+Use a small, understandable, feature-oriented structure.
+
+A suggested starting point:
+
+src/
+  extension.ts
+  commands/
+    createController.ts
+    createFormRequest.ts
+    createApiResource.ts
+  services/
+    laravelProjectDetector.ts
+    fileGenerator.ts
+    namespaceResolver.ts
+    phpNameValidator.ts
+  templates/
+    controller.ts
+    formRequest.ts
+    apiResource.ts
+  utils/
+    fileSystem.ts
+    errors.ts
+
+tests/
+  unit/
+  integration/
+
+.github/
+  workflows/
+
+docs/
+
+This structure is a starting point, not an excuse to create unnecessary abstractions. Keep the code simple. Do not use a repository pattern for local file generation. Avoid excessive classes, unnecessary dependency injection, and overengineering.
+
+Separate:
+- VS Code UI interactions.
+- Input validation.
+- Laravel project detection.
+- Namespace/path resolution.
+- PHP template rendering.
+- File-writing and overwrite confirmation.
+
+Use explicit types. Avoid any unless genuinely necessary. Keep functions small and testable.
+
+## 8. Laravel Compatibility
+
+Support conventional Laravel project structures first.
+
+Do not hardcode one application's namespace or directory layout. Derive the root namespace from composer.json where feasible, including normal PSR-4 autoload mappings.
+
+Handle nested directories and custom PSR-4 mappings where practical. If a configuration is unsupported, explain the limitation rather than generating incorrect PHP.
+
+Do not assume all Laravel versions have identical APIs. Generated classes should use conservative, broadly compatible Laravel conventions, and compatibility limitations must be documented.
+
+Never execute generated PHP automatically.
+
+## 9. Security and File Safety
+
+This is a local developer tool.
+
+Mandatory requirements:
+- No telemetry or analytics.
+- No external network requests in the MVP.
+- No user account or credentials collection.
+- No execution of arbitrary shell commands from untrusted input.
+- No use of eval or dynamic execution of generated code.
+- Prevent path traversal and writes outside the intended workspace destination.
+- Validate file and class names.
+- Never silently overwrite existing files.
+- Do not read or transmit .env secrets.
+- Avoid logging source code or sensitive project content.
+- Do not modify Laravel application files except when the user explicitly invokes a generator and confirms the target operation.
+
+If any requested feature introduces a security concern, explain it and choose the safer alternative.
+
+## 10. Testing Requirements
+
+Write automated tests for:
+- Laravel project detection.
+- Invalid and valid class names.
+- PHP namespace resolution.
+- PSR-4 mapping handling.
+- File path construction.
+- Existing-file conflict handling.
+- File creation and cancellation.
+- Generated PHP content.
+- Error handling for inaccessible paths.
+- Workspace with no Laravel project.
+- Nested Laravel project folders.
+
+Include integration tests for the extension commands where practical.
+
+Run the available checks:
+- TypeScript compilation.
+- Linting.
+- Formatting check.
+- Automated test suite.
+- Extension packaging validation.
+
+Do not claim a test passed unless it was actually executed successfully. If a check cannot run because of missing tools or environment limitations, report that explicitly.
+
+## 11. Documentation
+
+Create and maintain:
+
+### README.md
+Include:
+- Project overview.
+- Problem statement.
+- Feature list.
+- Supported environment.
+- Installation instructions.
+- Command Palette commands.
+- Step-by-step usage examples.
+- Screenshots or a clearly marked screenshot checklist.
+- Limitations.
+- Troubleshooting.
+- Development setup.
+- Testing instructions.
+- Packaging instructions.
+- Contribution link.
+- License.
+
+### CONTRIBUTING.md
+Explain:
+- Development environment.
+- Branch and pull request workflow.
+- Coding conventions.
+- Test requirements.
+- Issue reporting.
+
+### CHANGELOG.md
+Use versioned entries with Added, Changed, Fixed, and Security sections where appropriate.
+
+### LICENSE
+Include the full MIT license text with a placeholder for the actual copyright holder and year. Do not invent a legal identity.
+
+### SECURITY.md
+Explain how to report security issues responsibly.
+
+### .github/
+Provide useful issue templates, pull request template, and a GitHub Actions workflow for build, lint, and tests.
+
+Document all currently supported features accurately. Do not advertise unimplemented features.
+
+## 12. Open-Source and Marketplace Readiness
+
+Prepare the project for a future public GitHub repository and VS Code Marketplace listing.
+
+Use a temporary publisher identifier if the actual publisher is not yet known. Clearly mark values the maintainer must replace.
+
+Prepare:
+- package.json metadata.
+- Extension icon requirements.
+- Marketplace description.
+- Relevant keywords.
+- README screenshots checklist.
+- Versioning and release checklist.
+- VSIX packaging command.
+
+Do not publish to any marketplace, create remote repositories, push commits, or request publishing credentials without explicit approval.
+
+## 13. Development Workflow
+
+Follow this workflow:
+
+Phase 1: Inspect the workspace, summarize findings, and propose the smallest viable implementation plan.
+
+Phase 2: Create the extension scaffold and essential configuration.
+
+Phase 3: Implement Laravel detection and shared validation utilities.
+
+Phase 4: Implement the Controller generator and tests.
+
+Phase 5: Implement the Form Request generator and tests.
+
+Phase 6: Implement the API Resource generator if the previous milestones are stable.
+
+Phase 7: Complete documentation, GitHub Actions, and packaging configuration.
+
+Phase 8: Run checks and fix all reproducible issues.
+
+Phase 9: Provide a final report.
+
+After each major phase:
+- Summarize what was implemented.
+- List changed files.
+- Report tests actually run and their results.
+- Identify remaining limitations.
+- Avoid dumping large files into the chat when the workspace contains the implementation.
+
+Do not stop at a plan if you can safely implement the next phase in the current environment. Do not implement every future feature before the MVP is working.
+
+## 14. Definition of Done for MVP
+
+The MVP is complete only when:
+- The extension compiles.
+- Commands appear in the Command Palette.
+- Laravel detection behaves correctly.
+- Controller and Form Request generation work.
+- Generated PHP namespaces and class names are valid for supported structures.
+- Existing files are never silently overwritten.
+- Cancellation and errors are handled.
+- Automated tests pass in the available environment.
+- Documentation matches actual behavior.
+- A VSIX package can be produced locally.
+- No secrets, personal tokens, or unrelated files are committed.
+- No unimplemented feature is advertised as available.
+
+## 15. Final Report
+
+At completion, report:
+1. Features implemented.
+2. Architecture and folder structure.
+3. Files created or modified.
+4. Commands for installing dependencies, running tests, compiling, and packaging.
+5. Actual test results.
+6. How to launch the Extension Development Host and manually test the extension.
+7. How to install the VSIX locally.
+8. Remaining limitations and next recommended milestone.
+9. What the maintainer must do before publishing publicly.
+
+Start by inspecting the workspace and confirming the implementation plan. Prioritize correctness, safe file generation, simplicity, and high-quality documentation over feature quantity.

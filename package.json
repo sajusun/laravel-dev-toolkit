@@ -1,0 +1,116 @@
+{
+  "name": "laravel-developer-toolkit",
+  "displayName": "Laravel Developer Toolkit",
+  "description": "Productivity toolkit for Laravel developers. Generate controllers, form requests, and API resources safely with convention-aware PSR-4 namespace resolution.",
+  "version": "0.1.0",
+  "publisher": "placeholder-publisher",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/placeholder-org/laravel-developer-toolkit"
+  },
+  "bugs": {
+    "url": "https://github.com/placeholder-org/laravel-developer-toolkit/issues"
+  },
+  "homepage": "https://github.com/placeholder-org/laravel-developer-toolkit#readme",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets",
+    "Other"
+  ],
+  "keywords": [
+    "laravel",
+    "php",
+    "artisan",
+    "generator",
+    "controller",
+    "form-request",
+    "api-resource"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onCommand:laravel-toolkit.createController",
+    "onCommand:laravel-toolkit.createFormRequest",
+    "onCommand:laravel-toolkit.createApiResource",
+    "workspaceContains:artisan",
+    "workspaceContains:composer.json"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "laravel-toolkit.createController",
+        "title": "Create Controller",
+        "category": "Laravel Developer Toolkit"
+      },
+      {
+        "command": "laravel-toolkit.createFormRequest",
+        "title": "Create Form Request",
+        "category": "Laravel Developer Toolkit"
+      },
+      {
+        "command": "laravel-toolkit.createApiResource",
+        "title": "Create API Resource",
+        "category": "Laravel Developer Toolkit"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "laravel-toolkit.createController"
+        },
+        {
+          "command": "laravel-toolkit.createFormRequest"
+        },
+        {
+          "command": "laravel-toolkit.createApiResource"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "laravel-toolkit.createController",
+          "group": "7_modification@1",
+          "when": "explorerResourceIsFolder"
+        },
+        {
+          "command": "laravel-toolkit.createFormRequest",
+          "group": "7_modification@2",
+          "when": "explorerResourceIsFolder"
+        },
+        {
+          "command": "laravel-toolkit.createApiResource",
+          "group": "7_modification@3",
+          "when": "explorerResourceIsFolder"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "build": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+    "package": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --minify",
+    "package-vsix": "vsce package --no-dependencies",
+    "lint": "eslint src tests --ext ts",
+    "format": "prettier --write \"src/**/*.{ts,json,md}\" \"tests/**/*.{ts,json,md}\"",
+    "format-check": "prettier --check \"src/**/*.{ts,json,md}\" \"tests/**/*.{ts,json,md}\"",
+    "pretest": "tsc -p ./tsconfig.test.json",
+    "test": "mocha --require out/tests/setup.js --ui tdd --color \"out/tests/unit/**/*.test.js\""
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.12.7",
+    "@types/vscode": "^1.90.0",
+    "@typescript-eslint/eslint-plugin": "^7.7.0",
+    "@typescript-eslint/parser": "^7.7.0",
+    "@vscode/vsce": "^2.26.1",
+    "esbuild": "^0.21.1",
+    "eslint": "^8.57.0",
+    "mocha": "^10.4.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5"
+  }
+}

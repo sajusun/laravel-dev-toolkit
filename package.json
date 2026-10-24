@@ -6,12 +6,12 @@
   "publisher": "placeholder-publisher",
   "repository": {
     "type": "git",
-    "url": "https://github.com/placeholder-org/laravel-developer-toolkit"
+    "url": "https://github.com/sajusun/laravel-dev-toolkit"
   },
   "bugs": {
-    "url": "https://github.com/placeholder-org/laravel-developer-toolkit/issues"
+    "url": "https://github.com/sajusun/laravel-dev-toolkit/issues"
   },
-  "homepage": "https://github.com/placeholder-org/laravel-developer-toolkit#readme",
+  "homepage": "https://github.com/sajusun/laravel-dev-toolkit#readme",
   "license": "MIT",
   "engines": {
     "vscode": "^1.90.0"
